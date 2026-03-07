@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "AutoWesta Weather Station",
   "short_name": "AutoWesta",
   "description": "An AI-powered, affordable agricultural weather telemetry and forecasting dashboard.",
@@ -7,6 +8,13 @@
   "background_color": "#1e293b",
   "theme_color": "#667eea",
   "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "en-US",
+  "categories": [
+    "weather",
+    "utilities",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
@@ -18,6 +26,32 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Weather Forecast",
+      "short_name": "Forecast",
+      "description": "View the 7-day AI weather forecast",
+      "url": "./forecast.html",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Analytics Dashboard",
+      "short_name": "Analytics",
+      "description": "View historical weather analytics",
+      "url": "./analytics.html",
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
