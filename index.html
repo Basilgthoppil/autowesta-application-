@@ -867,7 +867,7 @@
         }
 
         // ============================================
-        // START APPLICATION
+        // START APPLICATION & PWA
         // ============================================
         try {
             startListening();
@@ -876,6 +876,21 @@
             document.getElementById('errorMessage').innerHTML = 
                 `<div class="error">Error connecting to Firebase: ${error.message}</div>`;
             document.getElementById('loading').style.display = 'none';
+        }
+
+        // ============================================
+        // PWA SERVICE WORKER REGISTRATION
+        // ============================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
         }
     </script>
 </body>
