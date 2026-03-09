@@ -458,6 +458,65 @@
                 <div class="card-value" id="altitude">--</div>
                 <div class="card-unit">m</div>
             </div>
+
+            <!-- CO Card -->
+            <div class="card" style="border-left-color: #78716c;">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(120, 113, 108, 0.1); color: #78716c;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="card-title">CO</div>
+                </div>
+                <div class="card-value" id="co">--</div>
+                <div class="card-unit">ppm</div>
+            </div>
+
+            <!-- CO2 Card -->
+            <div class="card" style="border-left-color: #fb923c;">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(251, 146, 60, 0.1); color: #fb923c;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <div class="card-title">CO₂</div>
+                </div>
+                <div class="card-value" id="co2">--</div>
+                <div class="card-unit">ppm</div>
+            </div>
+
+            <!-- Methane Card -->
+            <div class="card" style="border-left-color: #2dd4bf;">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(45, 212, 191, 0.1); color: #2dd4bf;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                        </svg>
+                    </div>
+                    <div class="card-title">Methane</div>
+                </div>
+                <div class="card-value" id="methane">--</div>
+                <div class="card-unit">ppm</div>
+            </div>
+
+            <!-- Ammonia Card -->
+            <div class="card" style="border-left-color: #c084fc;">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(192, 132, 252, 0.1); color: #c084fc;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 12a4 4 0 0 1 8 0"></path>
+                        </svg>
+                    </div>
+                    <div class="card-title">Ammonia</div>
+                </div>
+                <div class="card-value" id="ammonia">--</div>
+                <div class="card-unit">ppm</div>
+            </div>
         </div>
 
         <!-- Charts -->
@@ -602,6 +661,10 @@
             document.getElementById('rainfall').textContent = data.rainfall?.toFixed(2) || '--';
             document.getElementById('pressure').textContent = data.pressure?.toFixed(2) || '--';
             document.getElementById('altitude').textContent = data.altitude?.toFixed(1) || '--';
+            document.getElementById('co').textContent = data.co?.toFixed(2) || '--';
+            document.getElementById('co2').textContent = data.co2?.toFixed(2) || '--';
+            document.getElementById('methane').textContent = data.methane?.toFixed(2) || '--';
+            document.getElementById('ammonia').textContent = data.ammonia?.toFixed(2) || '--';
 
             // Update compass
             const angle = windDirections[data.windDirection] || 0;
@@ -812,7 +875,11 @@
                     'Rainfall (mm)',
                     'Pressure (hPa)',
                     'Altitude (m)',
-                    'Barometer Temp (°C)'
+                    'Barometer Temp (°C)',
+                    'CO (ppm)',
+                    'CO2 (ppm)',
+                    'Methane (ppm)',
+                    'Ammonia (ppm)'
                 ];
 
                 // Create CSV content
@@ -832,7 +899,11 @@
                         entry.rainfall || '',
                         entry.pressure || '',
                         entry.altitude || '',
-                        entry.baroTempC || ''
+                        entry.baroTempC || '',
+                        entry.co || '',
+                        entry.co2 || '',
+                        entry.methane || '',
+                        entry.ammonia || ''
                     ];
                     csvContent += row.join(',') + '\n';
                 });
