@@ -154,11 +154,13 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px var(--shadow-color);
-            transition: transform 0.3s ease, background 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid transparent;
         }
 
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-color);
         }
 
         .card-header {
@@ -517,6 +519,26 @@
                 <div class="card-value" id="ammonia">--</div>
                 <div class="card-unit">ppm</div>
             </div>
+
+            <!-- Air Quality Card (Spans full width) -->
+            <div class="card" style="grid-column: 1 / -1; border-left-color: #38bdf8; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div class="card-header" style="margin-bottom: 5px;">
+                        <div class="card-icon" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                <line x1="4" y1="22" x2="4" y2="15"></line>
+                                <path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title" style="font-size: 1.3rem;">Air Quality Status</div>
+                    </div>
+                    <div class="card-subtitle" style="margin-top: 0;" id="aqiDetails">Analyzing gas levels...</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="card-value" id="aqiStatus" style="font-size: 2rem;">--</div>
+                </div>
+            </div>
         </div>
 
         <!-- Charts -->
@@ -661,10 +683,35 @@
             document.getElementById('rainfall').textContent = data.rainfall?.toFixed(2) || '--';
             document.getElementById('pressure').textContent = data.pressure?.toFixed(2) || '--';
             document.getElementById('altitude').textContent = data.altitude?.toFixed(1) || '--';
-            document.getElementById('co').textContent = data.co?.toFixed(2) || '--';
-            document.getElementById('co2').textContent = data.co2?.toFixed(2) || '--';
-            document.getElementById('methane').textContent = data.methane?.toFixed(2) || '--';
-            document.getElementById('ammonia').textContent = data.ammonia?.toFixed(2) || '--';
+            const coVal = data.co ?? data.CO ?? data.Co;
+            const co2Val = data.co2 ?? data.CO2 ?? data.Co2;
+            const methaneVal = data.methane ?? data.Methane ?? data.CH4;
+            const ammoniaVal = data.ammonia ?? data.Ammonia ?? data.NH3;
+
+            document.getElementById('co').textContent = coVal?.toFixed(2) || '--';
+            document.getElementById('co2').textContent = co2Val?.toFixed(2) || '--';
+            document.getElementById('methane').textContent = methaneVal?.toFixed(2) || '--';
+            document.getElementById('ammonia').textContent = ammoniaVal?.toFixed(2) || '--';
+
+            // Air Quality Logic from Firebase
+            let aqiRating = data.airQuality || data.aqi || data.AQI || data.AirQuality || 'Calculating...';
+            let aqiMessage = data.aqiMessage || data.AQIMessage || data.AirQualityMessage || 'Reading gas levels from hardware...';
+            let aqiColor = '#38bdf8'; // Blue for unknown
+
+            // Try to assign color based on the actual value from firebase
+            const ratingStr = String(aqiRating).toLowerCase();
+            if (ratingStr.includes('good') || ratingStr.includes('excellent') || ratingStr.includes('normal')) {
+                aqiColor = '#22c55e'; // Green
+            } else if (ratingStr.includes('moderate') || ratingStr.includes('fair') || ratingStr.includes('warning')) {
+                aqiColor = '#f59e0b'; // Yellow
+            } else if (ratingStr.includes('poor') || ratingStr.includes('bad') || ratingStr.includes('hazardous') || ratingStr.includes('danger')) {
+                aqiColor = '#ef4444'; // Red
+            }
+
+            const aqiStatusEl = document.getElementById('aqiStatus');
+            aqiStatusEl.textContent = aqiRating;
+            aqiStatusEl.style.color = aqiColor;
+            document.getElementById('aqiDetails').textContent = aqiMessage;
 
             // Update compass
             const angle = windDirections[data.windDirection] || 0;
