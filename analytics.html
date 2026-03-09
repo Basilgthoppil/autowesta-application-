@@ -269,6 +269,30 @@
                     <div class="stat-value" id="avgPressure">--</div>
                     <div class="stat-trend" id="pressureTrend">--</div>
                 </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Average CO</div>
+                    <div class="stat-value" id="avgCO">--</div>
+                    <div class="stat-trend" id="coTrend">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Average CO₂</div>
+                    <div class="stat-value" id="avgCO2">--</div>
+                    <div class="stat-trend" id="co2Trend">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Average Methane</div>
+                    <div class="stat-value" id="avgMethane">--</div>
+                    <div class="stat-trend" id="methaneTrend">--</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">Average Ammonia</div>
+                    <div class="stat-value" id="avgAmmonia">--</div>
+                    <div class="stat-trend" id="ammoniaTrend">--</div>
+                </div>
             </div>
 
             <!-- Temperature Analysis Chart -->
@@ -411,6 +435,10 @@
             const wind = filteredData.map(d => d.windSpeed).filter(v => v != null);
             const rainfall = filteredData.map(d => d.rainfall).filter(v => v != null);
             const pressure = filteredData.map(d => d.pressure).filter(v => v != null);
+            const co = filteredData.map(d => d.co).filter(v => v != null);
+            const co2 = filteredData.map(d => d.co2).filter(v => v != null);
+            const methane = filteredData.map(d => d.methane).filter(v => v != null);
+            const ammonia = filteredData.map(d => d.ammonia).filter(v => v != null);
 
             // Average temperature
             const avgTemp = temps.reduce((a, b) => a + b, 0) / temps.length;
@@ -461,6 +489,38 @@
                 document.getElementById('avgPressure').textContent = avgPressure.toFixed(2) + ' hPa';
             } else {
                 document.getElementById('avgPressure').textContent = 'N/A';
+            }
+
+            // Average CO
+            if (co.length > 0) {
+                const avgCO = co.reduce((a, b) => a + b, 0) / co.length;
+                document.getElementById('avgCO').textContent = avgCO.toFixed(2) + ' ppm';
+            } else {
+                document.getElementById('avgCO').textContent = 'N/A';
+            }
+
+            // Average CO2
+            if (co2.length > 0) {
+                const avgCO2 = co2.reduce((a, b) => a + b, 0) / co2.length;
+                document.getElementById('avgCO2').textContent = avgCO2.toFixed(2) + ' ppm';
+            } else {
+                document.getElementById('avgCO2').textContent = 'N/A';
+            }
+
+            // Average Methane
+            if (methane.length > 0) {
+                const avgMethane = methane.reduce((a, b) => a + b, 0) / methane.length;
+                document.getElementById('avgMethane').textContent = avgMethane.toFixed(2) + ' ppm';
+            } else {
+                document.getElementById('avgMethane').textContent = 'N/A';
+            }
+
+            // Average Ammonia
+            if (ammonia.length > 0) {
+                const avgAmmonia = ammonia.reduce((a, b) => a + b, 0) / ammonia.length;
+                document.getElementById('avgAmmonia').textContent = avgAmmonia.toFixed(2) + ' ppm';
+            } else {
+                document.getElementById('avgAmmonia').textContent = 'N/A';
             }
 
             // Calculate trends (comparing first half vs second half)
