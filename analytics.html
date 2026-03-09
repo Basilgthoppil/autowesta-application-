@@ -105,7 +105,13 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 10px 30px var(--shadow-color);
-            transition: background 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-color);
         }
 
         .stat-header {
@@ -319,6 +325,18 @@
                 <canvas id="windRoseChart"></canvas>
             </div>
 
+            <!-- Gas Analysis Chart -->
+            <div class="chart-container">
+                <div class="chart-title">Air Quality Gases Analysis (CO, Methane, Ammonia)</div>
+                <canvas id="gasAnalysisChart"></canvas>
+            </div>
+
+            <!-- CO2 Analysis Chart -->
+            <div class="chart-container">
+                <div class="chart-title">CO₂ Level Trends</div>
+                <canvas id="co2AnalysisChart"></canvas>
+            </div>
+
             <!-- Rainfall Chart -->
             <div class="chart-container">
                 <div class="chart-title">Rainfall Pattern</div>
@@ -435,10 +453,10 @@
             const wind = filteredData.map(d => d.windSpeed).filter(v => v != null);
             const rainfall = filteredData.map(d => d.rainfall).filter(v => v != null);
             const pressure = filteredData.map(d => d.pressure).filter(v => v != null);
-            const co = filteredData.map(d => d.co).filter(v => v != null);
-            const co2 = filteredData.map(d => d.co2).filter(v => v != null);
-            const methane = filteredData.map(d => d.methane).filter(v => v != null);
-            const ammonia = filteredData.map(d => d.ammonia).filter(v => v != null);
+            const co = filteredData.map(d => d.co ?? d.CO ?? d.Co).filter(v => v != null);
+            const co2 = filteredData.map(d => d.co2 ?? d.CO2 ?? d.Co2).filter(v => v != null);
+            const methane = filteredData.map(d => d.methane ?? d.Methane ?? d.CH4).filter(v => v != null);
+            const ammonia = filteredData.map(d => d.ammonia ?? d.Ammonia ?? d.NH3).filter(v => v != null);
 
             // Average temperature
             const avgTemp = temps.reduce((a, b) => a + b, 0) / temps.length;
@@ -543,6 +561,7 @@
             createWindRoseChart();
             createRainfallChart();
             createScatterChart();
+            createGasAnalysisCharts();
         }
 
         // Temperature Analysis Chart
@@ -776,6 +795,85 @@
                         y: {
                             title: { display: true, text: 'Humidity (%)' }
                         }
+                    }
+                }
+            });
+        }
+
+        // Gas Analysis Charts
+        function createGasAnalysisCharts() {
+            const ctxGas = document.getElementById('gasAnalysisChart').getContext('2d');
+            const ctxCO2 = document.getElementById('co2AnalysisChart').getContext('2d');
+            
+            if (charts.gasAnalysis) charts.gasAnalysis.destroy();
+            if (charts.co2Analysis) charts.co2Analysis.destroy();
+
+            const labels = filteredData.map(d => d._date.toLocaleString());
+            const co = filteredData.map(d => d.co ?? d.CO ?? d.Co);
+            const co2 = filteredData.map(d => d.co2 ?? d.CO2 ?? d.Co2);
+            const methane = filteredData.map(d => d.methane ?? d.Methane ?? d.CH4);
+            const ammonia = filteredData.map(d => d.ammonia ?? d.Ammonia ?? d.NH3);
+
+            // Chart for CO, Methane, Ammonia (Lower PPM ranges)
+            charts.gasAnalysis = new Chart(ctxGas, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'CO (ppm)',
+                            data: co,
+                            borderColor: '#78716c',
+                            backgroundColor: 'rgba(120, 113, 108, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Methane (ppm)',
+                            data: methane,
+                            borderColor: '#2dd4bf',
+                            backgroundColor: 'rgba(45, 212, 191, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Ammonia (ppm)',
+                            data: ammonia,
+                            borderColor: '#c084fc',
+                            backgroundColor: 'rgba(192, 132, 252, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: { mode: 'index', intersect: false },
+                    scales: {
+                        x: { display: filteredData.length < 50, ticks: { maxRotation: 45, minRotation: 45 } },
+                        y: { title: { display: true, text: 'Concentration (ppm)' }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Separate Chart for CO2 (Higher PPM ranges usually)
+            charts.co2Analysis = new Chart(ctxCO2, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'CO₂ (ppm)',
+                            data: co2,
+                            borderColor: '#fb923c',
+                            backgroundColor: 'rgba(251, 146, 60, 0.2)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { display: filteredData.length < 50, ticks: { maxRotation: 45, minRotation: 45 } },
+                        y: { title: { display: true, text: 'CO₂ Concentration (ppm)' } }
                     }
                 }
             });
