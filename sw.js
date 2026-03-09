@@ -1,4 +1,4 @@
-const CACHE_NAME = 'autowesta-cache-v1';
+const CACHE_NAME = 'autowesta-cache-v2';
 const urlsToCache = [
   './',
   './index.html',
@@ -22,13 +22,20 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
+        // Network success: cache the latest version for offline use
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
         }
-        return fetch(event.request);
+        return response;
+      })
+      .catch(() => {
+        // Network failed: return cached version if available
+        return caches.match(event.request);
       })
   );
 });
