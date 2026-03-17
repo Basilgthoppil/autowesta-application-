@@ -251,6 +251,14 @@
             border-radius: 50%;
             background: var(--compass-bg);
             transition: background 0.3s ease, border-color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .compass-label {
+            fill: #555;
+        }
+        [data-theme="dark"] .compass-label {
+            fill: #cbd5e1;
         }
 
         .compass-arrow {
@@ -401,14 +409,18 @@
                     Direction: <span id="windDirection">--</span>
                 </div>
                 <div class="compass">
-                    <div class="compass-text compass-n">N</div>
-                    <div class="compass-text compass-e">E</div>
-                    <div class="compass-text compass-s">S</div>
-                    <div class="compass-text compass-w">W</div>
-                    <svg class="compass-arrow" width="150" height="150" id="compassArrow">
-                        <polygon points="75,20 80,75 75,75 70,75" fill="red"/>
-                        <polygon points="75,130 80,75 75,75 70,75" fill="gray"/>
-                        <circle cx="75" cy="75" r="5" fill="black"/>
+                    <svg width="150" height="150" id="compassSVG" style="position:absolute;top:0;left:0;">
+                        <!-- Cardinal labels inside circle -->
+                        <text x="75" y="16" text-anchor="middle" font-size="13" font-weight="bold" fill="#555" class="compass-label">N</text>
+                        <text x="138" y="79" text-anchor="middle" font-size="13" font-weight="bold" fill="#555" class="compass-label">E</text>
+                        <text x="75" y="148" text-anchor="middle" font-size="13" font-weight="bold" fill="#555" class="compass-label">S</text>
+                        <text x="12" y="79" text-anchor="middle" font-size="13" font-weight="bold" fill="#555" class="compass-label">W</text>
+                        <!-- Rotating arrow group -->
+                        <g id="compassArrow" style="transform-origin: 75px 75px; transition: transform 0.5s ease;">
+                            <polygon points="75,28 80,75 75,75 70,75" fill="#ef4444"/>
+                            <polygon points="75,122 80,75 75,75 70,75" fill="#94a3b8"/>
+                            <circle cx="75" cy="75" r="5" fill="#334155"/>
+                        </g>
                     </svg>
                 </div>
             </div>
